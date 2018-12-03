@@ -3,6 +3,7 @@ from wagtail.core.models import Page
 from wagtail.core.fields import RichTextField
 from wagtail.admin.edit_handlers import FieldPanel
 from django.shortcuts import render
+from datetime import datetime
 
 class User(models.Model):
     first_name = models.CharField(max_length=100)
@@ -50,8 +51,10 @@ class Event(Page):
                     #There is a bug here. When the admin changes the spots available or the waitlist amount after people start registering
                     #The spots available won't be reflected. This is also true for the waitlist. Also deleting a registration in the admin doesn't re-add a spot in spots available
                         #update_spot = event_instance
-                        #update_spot.spots_available = self.initial_spots - 1
+                        #update_spot.spots_availabPrintingle = self.initial_spots - 1
                         #update_spot.save(update_fields=['spots_available'])
+                        #next issue: Validation based on the user's first and last names
+
                     return render(request, 'ppl_registration/thank_you.html', {
                         'page': self,
                         'user': user,
@@ -89,6 +92,10 @@ class Event(Page):
 class Registration(models.Model):
     user_name = models.ForeignKey('User', default=1, on_delete=models.CASCADE)
     event_name = models.ForeignKey('Event', default=1, on_delete=models.CASCADE)
+    registration_date = models.DateTimeField(auto_now_add=True, blank=True)
     wait_list = models.BooleanField(default=0)
     def __str__(self):
-        return self.event_name.title
+        return self.event_name.title + ' ' + self.user_name.first_name + ' ' + self.user_name.last_name
+
+#We need a way to delete all users associated with the event when we delete the event
+#https://books.agiliq.com/projects/django-admin-cookbook/en/latest/add_actions.html

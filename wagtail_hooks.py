@@ -18,9 +18,12 @@ class EventAdmin(ModelAdmin):
 class RegistrationAdmin(ModelAdmin):
     model = Registration
     menu_label = 'Event Registrations'
+    list_display = ('event_name', 'user_name', 'wait_list', 'registration_date')
+    list_filter = ['event_name']
     add_to_settings_menu = True
     exclude_from_explorer = True
 
+
 modeladmin_register(RegistrantAdmin)
-modeladmin_register(EventAdmin)
 modeladmin_register(RegistrationAdmin)
+modeladmin_register(EventAdmin)
